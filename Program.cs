@@ -5,26 +5,42 @@ class Program
 {
     static void Main(string[] args)
     {
-        string fileName = "tecleado.txt";
+        string fileName = "C:/campions.txt";
+        string anthem = "Himno random de un equipo random porqué necesito algo random que poner en el himno random, random";
 
-        StreamWriter file = new StreamWriter(fileName, false);
-
-        string phrase;
-        do
+        if (!File.Exists(fileName))
         {
-            Console.Write("Introduce una frase (escribe 'off' para terminar): ");
-            phrase = Console.ReadLine();
-
-            if (phrase != "off")
+            try
             {
-                file.WriteLine(phrase);
+                using (StreamWriter writer = File.CreateText(fileName))
+                {
+                    writer.WriteLine(anthem);
+                    Console.WriteLine("Fichero creado y himno añadido.");
+                    writer.Close();
+                }
             }
-        } while (phrase != "off");
+            catch (IOException e)
+            {
+                Console.WriteLine("Error al crear el fichero: " + e.Message);
+            }
+        }
+        else
+        {
+            try
+            {
+                using (StreamWriter writer = File.AppendText(fileName))
+                {
+                    writer.WriteLine(anthem);
+                    Console.WriteLine("Himno añadido.");
+                    writer.Close();
+                }
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine("Error al añadir el himno al fichero: " + e.Message);
+            }
+        }
 
-        file.Close();
-
-        Console.WriteLine("Se ha guardado el texto en el archivo " + fileName);
-        Console.WriteLine("Pulsa una tecla para salir.");
-        Console.ReadKey();
+        Console.ReadLine(); // Esperamos a que el usuario presione Enter antes de salir
     }
 }
