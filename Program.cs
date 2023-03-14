@@ -6,25 +6,29 @@ class Program
     static void Main(string[] args)
     {
         string fileName = "tecleado.txt";
-
-        StreamWriter file = new StreamWriter(fileName, false);
-
-        string phrase;
-        do
+        int numLinesToRead = 20;
+        
+        try
         {
-            Console.Write("Introduce una frase (escribe 'off' para terminar): ");
-            phrase = Console.ReadLine();
-
-            if (phrase != "off")
+            using (StreamReader reader = File.OpenText(fileName))
             {
-                file.WriteLine(phrase);
+                string line;
+                int linesRead = 0;
+
+                while ((line = reader.ReadLine()) != null && linesRead < numLinesToRead)
+                {
+                    Console.WriteLine(line);
+                    linesRead++;
+                }
+
+                reader.Close();
             }
-        } while (phrase != "off");
+        }
+        catch (IOException e)
+        {
+            Console.WriteLine("Error al leer el fichero: " + e.Message);
+        }
 
-        file.Close();
-
-        Console.WriteLine("Se ha guardado el texto en el archivo " + fileName);
-        Console.WriteLine("Pulsa una tecla para salir.");
-        Console.ReadKey();
+        Console.ReadLine();
     }
 }
